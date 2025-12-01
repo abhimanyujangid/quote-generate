@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SQUYD Order / Config Form</title>
+  <style>
+    :root { --card:#fff; --muted:#6b7280; --accent:#0f62fe; }
+    body{font-family:Inter,ui-sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; margin:20px; color:#111827;}
+    .container{max-width:1100px;margin:0 auto;}
+    .card{background:var(--card); padding:20px;border-radius:10px;box-shadow:0 8px 30px rgba(15,23,42,0.06);}
+    h1{margin:0 0 8px 0;font-size:20px}
+    fieldset{border:1px solid #e6e9ee;padding:14px;border-radius:8px;margin-bottom:16px}
+    legend{font-weight:600;padding:0 6px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea{width:100%;padding:8px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .muted{color:var(--muted);font-size:13px}
+    .group{padding:10px;border-radius:8px;border:1px dashed #e6e9ee;background:#fbfbfd}
+    .inline {display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+    .btn.secondary{background:#4b5563}
+    .subhead{font-weight:600;margin-bottom:8px}
+    .checkbox-row{display:flex;flex-direction:column;gap:6px}
+    .two-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .controls {display:flex;gap:12px;justify-content:flex-end;margin-top:10px}
+    @media(max-width:680px){ .two-cols{grid-template-columns:1fr} }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>SQUYD — Order / Configuration Form</h1>
+
+      <form id="squydForm" onsubmit="return false;">
+        <!-- Contact -->
+        <fieldset>
+          <legend>Contact</legend>
+          <div class="grid">
+            <div><label for="name">Name</label><input id="name" name="name" type="text" required /></div>
+            <div><label for="company">Company</label><input id="company" name="company" type="text" /></div>
+            <div><label for="designation">Designation</label><input id="designation" name="designation" type="text" /></div>
+            <div><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
+            <div><label for="telm">Telephone (M)</label><input id="telm" name="telm" type="tel" /></div>
+            <div><label for="tell">Telephone (L)</label><input id="tell" name="tell" type="tel" /></div>
+            <div><label for="gstin">GSTIN</label><input id="gstin" name="gstin" type="text" /></div>
+          </div>
+        </fieldset>
+
+        <!-- Billing -->
+        <fieldset>
+          <legend>Billing Address</legend>
+          <div class="grid">
+            <div><label for="bill_addr">Address</label><textarea id="bill_addr" name="bill_addr" rows="2"></textarea></div>
+            <div><label for="bill_pincode">Pincode</label><input id="bill_pincode" name="bill_pincode" /></div>
+            <div>
+              <label for="bill_country">Country</label>
+              <select id="bill_country" name="bill_country">
+                <option value="">-- Select Country --</option>
+                <option value="India">India</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Australia">Australia</option>
+                <option value="Canada">Canada</option>
+                <option value="Germany">Germany</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div id="bill_state_wrapper"><label for="bill_state">State</label><input id="bill_state" name="bill_state" /></div>
+          </div>
+        </fieldset>
+
+        <!-- Shipping -->
+        <fieldset>
+          <legend>Shipping Address</legend>
+
+          <div class="row">
+            <label><input type="checkbox" id="shipSame"> Shipping same as billing</label>
+          </div>
+
+          <div class="grid">
+            <div><label for="ship_addr">Address</label><textarea id="ship_addr" name="ship_addr" rows="2"></textarea></div>
+            <div><label for="ship_pincode">Pincode</label><input id="ship_pincode" name="ship_pincode" /></div>
+            <div>
+              <label for="ship_country">Country</label>
+              <select id="ship_country" name="ship_country">
+                <option value="">-- Select Country --</option>
+                <option value="India">India</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Australia">Australia</option>
+                <option value="Canada">Canada</option>
+                <option value="Germany">Germany</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div id="ship_state_wrapper"><label for="ship_state">State</label><input id="ship_state" name="ship_state" /></div>
+          </div>
+        </fieldset>
+
+        <!-- Model -->
+        <fieldset>
+          <legend>Select model</legend>
+          <div class="inline">
+            <label><input type="radio" name="model" value="SQUYD Lite"> SQUYD Lite</label>
+            <label><input type="radio" name="model" value="SQUYD Edu"> SQUYD Edu</label>
+            <label><input type="radio" name="model" value="SQUYD Advance"> SQUYD Advance</label>
+            <label><input type="radio" name="model" value="SQUYD Pro"> SQUYD Pro</label>
+            <label><input type="radio" name="model" value="Custom"> Custom</label>
+          </div>
+        </fieldset>
+
+        <!-- ADVANCE OPTIONS (visible only for SQUYD Advance) -->
+        <div id="advanceAttributes" style="display:none; margin-bottom:12px;">
+          <fieldset>
+            <legend>Advance Options</legend>
+
+            <div class="subhead">Wavelength (choose one)</div>
+            <div class="group">
+              <label><input type="radio" name="advance_wavelength" value="365"> 365nm</label><br>
+              <label><input type="radio" name="advance_wavelength" value="405"> 405nm</label>
+            </div>
+
+            <div class="subhead" style="margin-top:12px">Extrusion</div>
+            <div class="two-cols">
+              <div class="group">
+                <div class="muted">Extruder 1</div>
+                <label><input type="radio" name="extruder1" value="Mechanical"> Mechanical</label><br>
+                <label><input type="radio" name="extruder1" value="Pneumatic"> Pneumatic</label>
+              </div>
+              <div class="group">
+                <div class="muted">Extruder 2</div>
+                <label><input type="radio" name="extruder2" value="Mechanical"> Mechanical</label><br>
+                <label><input type="radio" name="extruder2" value="Pneumatic"> Pneumatic</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- CUSTOM ATTRIBUTES (hidden unless Custom is selected) -->
+        <div id="customAttributes" style="display:none; margin-bottom:12px;">
+          <fieldset>
+            <legend>Attributes / Options</legend>
+
+            <!-- Sterilization -->
+            <div class="subhead">Sterilization</div>
+            <div class="two-cols">
+              <div class="group">
+                <div class="checkbox-row">
+                  <label><input type="checkbox" id="steril_HEPA" name="steril_HEPA"> HEPA Filter 0.2µm</label>
+                  <label><input type="checkbox" id="steril_crosslinker" name="steril_crosslinker"> Crosslinker</label>
+                  <label><input type="checkbox" id="steril_365nm" name="steril_365nm"> 365nm</label>
+                  <label><input type="checkbox" id="steril_405nm" name="steril_405nm"> 405nm</label>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="subhead">BSL Level</div>
+                <label><input type="radio" name="bsl" value="BSL1"> BSL 1</label><br>
+                <label><input type="radio" name="bsl" value="BSL2"> BSL 2</label>
+              </div>
+            </div>
+
+            <!-- Image Capture -->
+            <div class="subhead" style="margin-top:14px">Image Capture</div>
+            <div class="group">
+              <label><input type="radio" name="imageCapture" value="none" checked> None</label><br>
+              <label><input type="radio" name="imageCapture" value="720p"> 720p HD Camera</label><br>
+              <label><input type="radio" name="imageCapture" value="1080p"> 1080p HD Camera</label>
+            </div>
+
+            <!-- Monitoring -->
+            <div class="subhead" style="margin-top:14px">Monitoring</div>
+            <div class="group">
+              <label><input type="checkbox" id="live_feedback" name="live_feedback"> Live Feedback (Mobile App)</label>
+              <label><input type="checkbox" id="rt_monitoring" name="rt_monitoring"> Real Time Monitoring</label>
+            </div>
+
+            <!-- Extrusion -->
+            <div class="subhead" style="margin-top:14px">Extrusion</div>
+            <div class="two-cols">
+              <div class="group">
+                <div class="muted">Extruder 1</div>
+                <label><input type="radio" name="extruder1" value="Mechanical"> Mechanical</label><br>
+                <label><input type="radio" name="extruder1" value="Pneumatic"> Pneumatic</label>
+              </div>
+              <div class="group">
+                <div class="muted">Extruder 2</div>
+                <label><input type="radio" name="extruder2" value="Mechanical"> Mechanical</label><br>
+                <label><input type="radio" name="extruder2" value="Pneumatic"> Pneumatic</label>
+              </div>
+            </div>
+
+          </fieldset>
+        </div>
+
+        <div class="controls">
+          <button type="reset" class="btn secondary" id="resetBtn">Reset</button>
+          <button type="button" class="btn" id="generateQuoteBtn">Generate Quote</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    // India states for optional enhancement
+    const indiaStates = [
+      "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh",
+      "Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland",
+      "Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttarakhand","Uttar Pradesh","West Bengal",
+      "Andaman and Nicobar Islands","Chandigarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir",
+      "Ladakh","Lakshadweep","Puducherry"
+    ];
+
+    // Helpers to switch state input when country is India
+    function createStateSelect(id, name, value=''){
+      const select = document.createElement('select');
+      select.id = id;
+      select.name = name;
+      const empty = document.createElement('option'); empty.value = ''; empty.textContent = '-- Select State --';
+      select.appendChild(empty);
+      indiaStates.forEach(s=>{
+        const o = document.createElement('option'); o.value = s; o.textContent = s;
+        if(s === value) o.selected = true;
+        select.appendChild(o);
+      });
+      return select;
+    }
+
+    function ensureStateControl(countrySelect, wrapperId, prefix){
+      const wrapper = document.getElementById(wrapperId);
+      const country = countrySelect.value;
+      // remove existing controls except the label
+      Array.from(wrapper.children).forEach(child => {
+        if(child.tagName !== 'LABEL') wrapper.removeChild(child);
+      });
+      let control;
+      if(country === 'India'){
+        control = createStateSelect(prefix + '_state', prefix + '_state');
+      } else {
+        control = document.createElement('input');
+        control.type = 'text';
+        control.id = prefix + '_state';
+        control.name = prefix + '_state';
+        control.placeholder = 'State / Province';
+      }
+      wrapper.appendChild(control);
+      return control;
+    }
+
+    // Setup country/state behavior
+    const billCountry = document.getElementById('bill_country');
+    const shipCountry = document.getElementById('ship_country');
+    ensureStateControl(billCountry, 'bill_state_wrapper', 'bill');
+    ensureStateControl(shipCountry, 'ship_state_wrapper', 'ship');
+
+    billCountry.addEventListener('change', ()=>{
+      ensureStateControl(billCountry, 'bill_state_wrapper', 'bill');
+      if(document.getElementById('shipSame').checked){
+        copyBillingToShipping();
+      }
+    });
+    shipCountry.addEventListener('change', ()=> ensureStateControl(shipCountry, 'ship_state_wrapper', 'ship'));
+
+    // Shipping same as billing behavior
+    const shipSame = document.getElementById('shipSame');
+    shipSame.addEventListener('change', () => {
+      if(shipSame.checked){
+        copyBillingToShipping();
+        setShippingDisabled(true);
+        addBillingSyncListeners();
+      } else {
+        setShippingDisabled(false);
+        removeBillingSyncListeners();
+      }
+    });
+
+    function setShippingDisabled(disabled){
+      const ids = ['ship_addr','ship_pincode','ship_country','ship_state'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.disabled = disabled;
+      });
+    }
+
+    function copyBillingToShipping(){
+      const billFields = {
+        ship_addr: 'bill_addr',
+        ship_pincode: 'bill_pincode',
+        ship_country: 'bill_country'
+      };
+      for(const shipKey in billFields){
+        const billEl = document.getElementById(billFields[shipKey]);
+        const shipEl = document.getElementById(shipKey);
+        if(billEl && shipEl) shipEl.value = billEl.value;
+      }
+      // ensure shipping state control exists and copy value
+      ensureStateControl(document.getElementById('ship_country'), 'ship_state_wrapper', 'ship');
+      const bState = document.getElementById('bill_state');
+      const sState = document.getElementById('ship_state');
+      if(bState && sState) sState.value = bState.value || '';
+    }
+
+    // Billing -> Shipping sync listeners (while checkbox is checked)
+    const billingSyncIds = ['bill_addr','bill_pincode','bill_country'];
+    let billingListeners = [];
+    function addBillingSyncListeners(){
+      removeBillingSyncListeners();
+      billingListeners = billingSyncIds.map(id=>{
+        const el = document.getElementById(id);
+        if(!el) return null;
+        const fn = ()=>{ if(shipSame.checked){ if(id === 'bill_country'){ document.getElementById('ship_country').value = el.value; ensureStateControl(document.getElementById('ship_country'), 'ship_state_wrapper', 'ship'); const bs = document.getElementById('bill_state'); const ss = document.getElementById('ship_state'); if(bs && ss) ss.value = bs.value; } else { const shipId = id.replace('bill_','ship_'); const shipEl = document.getElementById(shipId); if(shipEl) shipEl.value = el.value; } } };
+        el.addEventListener('input', fn);
+        return {el, fn};
+      }).filter(Boolean);
+
+      const billStateEl = document.getElementById('bill_state');
+      if(billStateEl){
+        const fn = ()=>{ if(shipSame.checked){ const s = document.getElementById('ship_state'); if(s) s.value = billStateEl.value; } };
+        billStateEl.addEventListener('input', fn);
+        billingListeners.push({el: billStateEl, fn});
+      }
+    }
+    function removeBillingSyncListeners(){
+      billingListeners.forEach(item => { if(item && item.el && item.fn) item.el.removeEventListener('input', item.fn); });
+      billingListeners = [];
+    }
+
+    // Show attributes depending on model:
+    // - SQUYD Advance -> show advanceAttributes
+    // - Custom -> show customAttributes (full)
+    // - others -> hide both
+    const modelRadios = document.querySelectorAll('input[name="model"]');
+    const advanceAttributes = document.getElementById('advanceAttributes');
+    const customAttributes = document.getElementById('customAttributes');
+
+    function updateAttributesVisibility(){
+      const sel = Array.from(modelRadios).find(r => r.checked);
+      const val = sel ? sel.value : null;
+      if(val === 'SQUYD Advance'){
+        advanceAttributes.style.display = 'block';
+        customAttributes.style.display = 'none';
+      } else if(val === 'Custom'){
+        advanceAttributes.style.display = 'none';
+        customAttributes.style.display = 'block';
+      } else {
+        advanceAttributes.style.display = 'none';
+        customAttributes.style.display = 'none';
+      }
+    }
+    modelRadios.forEach(r => r.addEventListener('change', updateAttributesVisibility));
+    // initialize visibility on load
+    document.addEventListener('DOMContentLoaded', updateAttributesVisibility);
+
+    // Reset handler: ensure state controls reset and hide attribute blocks
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      setTimeout(()=>{
+        ensureStateControl(billCountry, 'bill_state_wrapper', 'bill');
+        ensureStateControl(shipCountry, 'ship_state_wrapper', 'ship');
+        removeBillingSyncListeners();
+        setShippingDisabled(false);
+        shipSame.checked = false;
+        advanceAttributes.style.display = 'none';
+        customAttributes.style.display = 'none';
+      }, 10);
+    });
+
+    // Generate Quote: collect data and output JSON to console (demo)
+    document.getElementById('generateQuoteBtn').addEventListener('click', generateQuote);
+
+    function getRadioValue(name){
+      const r = document.querySelector('input[name="'+name+'"]:checked');
+      return r ? r.value : null;
+    }
+
+    function generateQuote(){
+      // collect form values
+      const data = {
+        name: document.getElementById('name').value || '',
+        company: document.getElementById('company').value || '',
+        designation: document.getElementById('designation').value || '',
+        email: document.getElementById('email').value || '',
+        telephone_mobile: document.getElementById('telm').value || '',
+        telephone_landline: document.getElementById('tell').value || '',
+        gstin: document.getElementById('gstin').value || '',
+        billing: {
+          address: document.getElementById('bill_addr').value || '',
+          pincode: document.getElementById('bill_pincode').value || '',
+          country: document.getElementById('bill_country').value || '',
+          state: (document.getElementById('bill_state') ? document.getElementById('bill_state').value : '')
+        },
+        shipping_same_as_billing: !!document.getElementById('shipSame').checked,
+        shipping: {
+          address: document.getElementById('ship_addr').value || '',
+          pincode: document.getElementById('ship_pincode').value || '',
+          country: document.getElementById('ship_country').value || '',
+          state: (document.getElementById('ship_state') ? document.getElementById('ship_state').value : '')
+        },
+        model: getRadioValue('model'),
+        attributes: null
+      };
+
+      // handle attributes per model
+      if(data.model === 'SQUYD Advance'){
+        // for Advance: wavelength radio and extruder1/2 radios
+        data.attributes = {
+          wavelength_nm: getRadioValue('advance_wavelength'),
+          extrusion: {
+            extruder1: getRadioValue('extruder1'),
+            extruder2: getRadioValue('extruder2')
+          }
+        };
+      } else if(data.model === 'Custom'){
+        // full custom attributes
+        data.attributes = {
+          sterilization: {
+            hepa_0_2um: !!document.getElementById('steril_HEPA')?.checked,
+            crosslinker: !!document.getElementById('steril_crosslinker')?.checked,
+            nm365: !!document.getElementById('steril_365nm')?.checked,
+            nm405: !!document.getElementById('steril_405nm')?.checked,
+            bsl: getRadioValue('bsl')
+          },
+          image_capture: getRadioValue('imageCapture') || 'none',
+          live_feedback_mobile_app: !!document.getElementById('live_feedback')?.checked,
+          real_time_monitoring: !!document.getElementById('rt_monitoring')?.checked,
+          extrusion: {
+            extruder1: getRadioValue('extruder1'),
+            extruder2: getRadioValue('extruder2')
+          }
+        };
+      }
+
+      console.log('Generated Quote Data:', data);
+      alert('Quote generated — check the browser console for the JSON output (demo).');
+      // Replace with server POST when ready.
+    }
+  </script>
+</body>
+</html>
