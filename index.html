@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SQUYD Signup — Form + PDF</title>
+    <title>SQUYD Signup — Form + Preview + PDF</title>
 
     <link href="https://fonts.cdnfonts.com/css/geist" rel="stylesheet">
     <style>
@@ -30,10 +30,6 @@
             padding: 2.5rem 1.5rem;
         }
 
-        .inner-container {
-            margin: 0 auto;
-        }
-
         h1 {
             font-size: 1.5rem;
             font-weight: 600;
@@ -46,6 +42,7 @@
             margin-bottom: 1rem;
         }
 
+        /* --- Radio Plans --- */
         .plan-radios {
             display: flex;
             gap: 1.5rem;
@@ -82,6 +79,7 @@
             box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px white;
         }
 
+        /* --- Form Elements --- */
         .form {
             display: flex;
             flex-direction: column;
@@ -151,14 +149,8 @@
             resize: none;
         }
 
-        input[type=number]::-webkit-outer-spin-button,
-        input[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .space-y {
@@ -202,21 +194,35 @@
             gap: 1.5rem;
         }
 
+        /* --- Buttons --- */
         .btn {
             background-color: #1f2937;
             color: white;
-            padding: 0.75rem 5rem;
+            padding: 0.75rem 2rem;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             border: none;
             cursor: pointer;
             font-family: inherit;
             font-size: 1rem;
+            font-weight: 500;
             transition: background-color 0.2s;
+            text-align: center;
         }
 
         .btn:hover {
             background-color: #111827;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: #f3f4f6;
         }
 
         .status {
@@ -232,13 +238,68 @@
             cursor: pointer;
         }
 
-        #printArea {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
+        /* --- Preview Specific Styles --- */
+        .preview-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .preview-header {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-body {
             padding: 2rem;
-            font-family: var(--geist);
-            color: #111;
+        }
+
+        .preview-section-title {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .preview-row {
+            display: flex;
+            margin-bottom: 1.25rem;
+        }
+
+        .preview-col {
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .preview-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-value {
+            font-size: 1rem;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .preview-plan-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
         }
     </style>
 
@@ -247,8 +308,8 @@
 
 <body>
     <div class="container">
-        <div class="inner-container">
-            <h1>SQUYD Subscription</h1>
+
+        <div id="stage1">
 
             <div class="plan-radios">
                 <label class="radio-label">
@@ -272,8 +333,8 @@
             <form id="signupForm" class="form">
                 <div id="advancedOptions" class="hidden">
                     <h2>Advance Options</h2>
-                    <div class="section-card space-y">
-                        <div class="option-row">
+                    <div class="space-y">
+                        <div class="option-row section-card">
                             <span class="option-label">Wavelength</span>
                             <div class="option-radios">
                                 <label class="radio-label">
@@ -291,7 +352,7 @@
                             </div>
                         </div>
 
-                        <div class="option-row">
+                        <div class="option-row section-card">
                             <span class="option-label">Extrusion</span>
                             <div class="option-radios">
                                 <label class="radio-label">
@@ -395,17 +456,31 @@
                 </div>
 
                 <div class="flex-row">
-                    <button type="button" id="submitBtn" class="btn">Submit</button>
-                    <span id="status" class="status"></span>
+                    <button type="button" id="previewBtn" class="btn" style="width: 100%;">Preview Application</button>
+                    <span id="formStatus" class="status"></span>
                 </div>
 
             </form>
         </div>
+
+        <div id="stage2" class="hidden">
+            <h1 style="margin-bottom: 0.5rem;">Review & Submit</h1>
+            <p style="color:#666; margin-bottom: 2rem;">Please review your details before downloading the PDF.</p>
+
+            <div id="previewCard" class="preview-container">
+                </div>
+
+            <div class="flex-row" style="margin-top: 2rem; justify-content: flex-end;">
+                <button type="button" id="editBtn" class="btn btn-outline">Back to Edit</button>
+                <button type="button" id="downloadBtn" class="btn">Confirm & Download PDF</button>
+            </div>
+            <div id="downloadStatus" class="status" style="text-align: right; margin-top: 10px;"></div>
+        </div>
+
     </div>
 
-    <div id="printArea"></div>
-
     <script>
+        // --- 1. UI Logic (Advanced Options & Address Copy) ---
         const planRadios = document.querySelectorAll('input[name="plan"]');
         const adv = document.getElementById('advancedOptions');
 
@@ -419,9 +494,7 @@
         }
 
         planRadios.forEach(r => r.addEventListener('change', toggleAdvancedOptions));
-
-        // Run on load to set initial state
-        toggleAdvancedOptions();
+        toggleAdvancedOptions(); // Init
 
         document.getElementById('sameAsBilling').addEventListener('change', (e) => {
             if (e.target.checked) {
@@ -432,18 +505,33 @@
             }
         });
 
-        document.getElementById('submitBtn').addEventListener('click', async () => {
-            const status = document.getElementById('status');
-            status.textContent = '';
+        // --- 2. Stage Switching Logic ---
 
+        const stage1 = document.getElementById('stage1');
+        const stage2 = document.getElementById('stage2');
+        const formStatus = document.getElementById('formStatus');
+        const previewCard = document.getElementById('previewCard');
+        let currentData = {}; // Store data for PDF generation
+
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            // Validation
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
-            if (!name || !email) { status.textContent = 'Please fill at least Name and Email.'; return; }
+            
+            if (!name || !email) { 
+                formStatus.textContent = 'Please fill at least Name and Email.'; 
+                formStatus.style.color = 'red';
+                return; 
+            }
+            formStatus.textContent = '';
 
-            const data = {
+            // Collect Data
+            currentData = {
                 plan: document.querySelector('input[name=plan]:checked').value,
-                name, company: document.getElementById('company').value.trim(),
-                email, phone: document.getElementById('phone').value.trim(),
+                name, 
+                company: document.getElementById('company').value.trim(),
+                email, 
+                phone: document.getElementById('phone').value.trim(),
                 billingAddress: document.getElementById('billingAddress').value.trim(),
                 billingCountry: document.getElementById('billingCountry').value.trim(),
                 billingState: document.getElementById('billingState').value.trim(),
@@ -456,60 +544,123 @@
                 extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A'
             };
 
-            const printArea = document.getElementById('printArea');
-            printArea.innerHTML = `
-        <div style="border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:16px;">
-          <h2 style="font-size:20px; margin:0;">SQUYD Signup Summary</h2>
-          <div style="font-size:13px; color:#555; margin-top:6px;">Plan: ${escapeHtml(data.plan)}</div>
-        </div>
-        <div style="display:flex; gap:20px; flex-wrap:wrap;">
-          <div style="flex:1; min-width:220px;">
-            <h3 style="margin:0 0 6px 0; font-size:14px;">Contact</h3>
-            <div style="font-size:13px">${escapeHtml(data.name)}</div>
-            <div style="font-size:13px; color:#555">${escapeHtml(data.company)}</div>
-            <div style="font-size:13px; margin-top:6px">${escapeHtml(data.email)} | ${escapeHtml(data.phone)}</div>
-          </div>
-          <div style="flex:1; min-width:220px;">
-            <h3 style="margin:0 0 6px 0; font-size:14px;">Billing</h3>
-            <div style="font-size:13px">${nl2br(escapeHtml(data.billingAddress))}</div>
-            <div style="font-size:13px; color:#555; margin-top:6px">${escapeHtml(data.billingCountry)} • ${escapeHtml(data.billingState)} • ${escapeHtml(data.billingZip)}</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;">
-          <h3 style="margin:0 0 6px 0; font-size:14px;">Shipping</h3>
-          <div style="font-size:13px">${nl2br(escapeHtml(data.shippingAddress))}</div>
-          <div style="font-size:13px; color:#555; margin-top:6px">${escapeHtml(data.shippingCountry)} • ${escapeHtml(data.shippingState)} • ${escapeHtml(data.shippingZip)}</div>
-        </div>
-        ${data.plan === 'Advance' || data.plan === 'Pro' ? (`
-          <div style="margin-top:12px;">
-            <h3 style="margin:0 0 6px 0; font-size:14px;">Advanced Options</h3>
-            <div style="font-size:13px">Wavelength: ${escapeHtml(data.wavelength)}</div>
-            <div style="font-size:13px">Extrusion: ${escapeHtml(data.extrusion)}</div>
-          </div>
-        `) : ''}
-      `;
+            // Generate Preview HTML
+            const isAdvanced = currentData.plan === 'Advance' || currentData.plan === 'Pro';
+            
+            const html = `
+                <div class="preview-header">
+                    <div>
+                        <h2 style="margin:0;">Application Summary</h2>
+                        <div style="font-size: 0.875rem; color:#6b7280; margin-top:4px;">${new Date().toLocaleDateString()}</div>
+                    </div>
+                    <span class="preview-plan-badge">${escapeHtml(currentData.plan)} Plan</span>
+                </div>
+                <div class="preview-body">
+                    
+                    <div class="preview-section-title">Contact Information</div>
+                    <div class="preview-row">
+                        <div class="preview-col">
+                            <div class="preview-label">Name</div>
+                            <div class="preview-value">${escapeHtml(currentData.name)}</div>
+                        </div>
+                         <div class="preview-col">
+                            <div class="preview-label">Company</div>
+                            <div class="preview-value">${escapeHtml(currentData.company) || '-'}</div>
+                        </div>
+                    </div>
+                    <div class="preview-row">
+                        <div class="preview-col">
+                            <div class="preview-label">Email</div>
+                            <div class="preview-value">${escapeHtml(currentData.email)}</div>
+                        </div>
+                         <div class="preview-col">
+                            <div class="preview-label">Phone</div>
+                            <div class="preview-value">${escapeHtml(currentData.phone) || '-'}</div>
+                        </div>
+                    </div>
 
+                    <div style="margin-top: 2rem;"></div>
+
+                    <div class="flex-between" style="align-items: flex-start; margin-bottom:0;">
+                        <div style="flex:1; padding-right: 1rem;">
+                            <div class="preview-section-title">Billing Address</div>
+                            <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
+                                ${nl2br(escapeHtml(currentData.billingAddress))}<br>
+                                ${escapeHtml(currentData.billingState)} ${escapeHtml(currentData.billingZip)}<br>
+                                ${escapeHtml(currentData.billingCountry)}
+                            </div>
+                        </div>
+                        <div style="flex:1;">
+                            <div class="preview-section-title">Shipping Address</div>
+                            <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
+                                ${nl2br(escapeHtml(currentData.shippingAddress))}<br>
+                                ${escapeHtml(currentData.shippingState)} ${escapeHtml(currentData.shippingZip)}<br>
+                                ${escapeHtml(currentData.shippingCountry)}
+                            </div>
+                        </div>
+                    </div>
+
+                    ${isAdvanced ? `
+                    <div style="margin-top: 2rem;">
+                        <div class="preview-section-title">Technical Specifications</div>
+                         <div class="preview-row">
+                            <div class="preview-col">
+                                <div class="preview-label">Wavelength</div>
+                                <div class="preview-value">${escapeHtml(currentData.wavelength)}</div>
+                            </div>
+                             <div class="preview-col">
+                                <div class="preview-label">Extrusion System</div>
+                                <div class="preview-value">${escapeHtml(currentData.extrusion)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                </div>
+            `;
+
+            previewCard.innerHTML = html;
+
+            // Switch Views
+            stage1.classList.add('hidden');
+            stage2.classList.remove('hidden');
+            window.scrollTo(0,0);
+        });
+
+        document.getElementById('editBtn').addEventListener('click', () => {
+            stage2.classList.add('hidden');
+            stage1.classList.remove('hidden');
+            window.scrollTo(0,0);
+        });
+
+        // --- 3. PDF Generation ---
+
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const status = document.getElementById('downloadStatus');
+            status.textContent = 'Generating PDF...';
+            
+            const element = document.getElementById('previewCard');
+            
             const opt = {
-                margin: 12,
-                filename: `${data.name.replace(/\s+/g, '_') || 'squyd'}_${data.plan}.pdf`,
+                margin: 15,
+                filename: `${currentData.name.replace(/\s+/g, '_') || 'squyd'}_${currentData.plan}_Application.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
             };
 
-            status.textContent = 'Generating PDF...';
             try {
-                printArea.style.display = 'block';
-                await html2pdf().set(opt).from(printArea).save();
-                status.textContent = 'PDF downloaded.';
+                await html2pdf().set(opt).from(element).save();
+                status.textContent = 'PDF Downloaded successfully.';
+                status.style.color = 'green';
             } catch (err) {
                 console.error(err);
                 status.textContent = 'Error generating PDF.';
-            } finally {
-                printArea.style.display = 'none';
+                status.style.color = 'red';
             }
         });
 
+        // Helpers
         function escapeHtml(unsafe) {
             return (unsafe || '').replace(/[&<>"]+/g, function (match) {
                 return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[match];
