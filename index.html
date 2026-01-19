@@ -39,7 +39,7 @@
         h2 {
             font-size: 1.125rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
         }
 
         /* --- Radio Plans --- */
@@ -170,7 +170,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
@@ -468,7 +468,7 @@
             <p style="color:#666; margin-bottom: 2rem;">Please review your details before downloading the PDF.</p>
 
             <div id="previewCard" class="preview-container">
-                </div>
+            </div>
 
             <div class="flex-row" style="margin-top: 2rem; justify-content: flex-end;">
                 <button type="button" id="editBtn" class="btn btn-outline">Back to Edit</button>
@@ -486,10 +486,25 @@
 
         function toggleAdvancedOptions() {
             const selected = document.querySelector('input[name="plan"]:checked');
+
+            // 1. Show/Hide Advanced Section
             if (selected && (selected.value === 'Advance' || selected.value === 'Pro')) {
                 adv.classList.remove('hidden');
             } else {
                 adv.classList.add('hidden');
+            }
+
+            // 2. Hide "Both" options if Advance is selected
+            const bothWavelength = document.querySelector('input[name="wavelength"][value="Both"]')?.closest('.radio-label');
+            const bothExtrusion = document.querySelector('input[name="extrusion"][value="Both"]')?.closest('.radio-label');
+
+            if (selected && selected.value === 'Advance') {
+                if (bothWavelength) bothWavelength.classList.add('hidden');
+                if (bothExtrusion) bothExtrusion.classList.add('hidden');
+            } else {
+                // Show them for Pro (or others if they were visible, though parent blocks them)
+                if (bothWavelength) bothWavelength.classList.remove('hidden');
+                if (bothExtrusion) bothExtrusion.classList.remove('hidden');
             }
         }
 
@@ -517,20 +532,20 @@
             // Validation
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
-            
-            if (!name || !email) { 
-                formStatus.textContent = 'Please fill at least Name and Email.'; 
+
+            if (!name || !email) {
+                formStatus.textContent = 'Please fill at least Name and Email.';
                 formStatus.style.color = 'red';
-                return; 
+                return;
             }
             formStatus.textContent = '';
 
             // Collect Data
             currentData = {
                 plan: document.querySelector('input[name=plan]:checked').value,
-                name, 
+                name,
                 company: document.getElementById('company').value.trim(),
-                email, 
+                email,
                 phone: document.getElementById('phone').value.trim(),
                 billingAddress: document.getElementById('billingAddress').value.trim(),
                 billingCountry: document.getElementById('billingCountry').value.trim(),
@@ -546,7 +561,7 @@
 
             // Generate Preview HTML
             const isAdvanced = currentData.plan === 'Advance' || currentData.plan === 'Pro';
-            
+
             const html = `
                 <div class="preview-header">
                     <div>
@@ -624,13 +639,13 @@
             // Switch Views
             stage1.classList.add('hidden');
             stage2.classList.remove('hidden');
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         });
 
         document.getElementById('editBtn').addEventListener('click', () => {
             stage2.classList.add('hidden');
             stage1.classList.remove('hidden');
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         });
 
         // --- 3. PDF Generation ---
@@ -638,9 +653,9 @@
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             const status = document.getElementById('downloadStatus');
             status.textContent = 'Generating PDF...';
-            
+
             const element = document.getElementById('previewCard');
-            
+
             const opt = {
                 margin: 15,
                 filename: `${currentData.name.replace(/\s+/g, '_') || 'squyd'}_${currentData.plan}_Application.pdf`,
