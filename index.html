@@ -83,21 +83,29 @@
                 <div class="section-card">
                     <div class="grid grid-2">
                         <div>
-                            <label class="field-label">Name</label>
-                            <input id="name" name="name" type="text" placeholder="Jane Smith" class="input" />
+                            <label class="field-label">Name <span class="required-star">*</span></label>
+                            <input id="name" name="name" type="text" placeholder="Jane Smith" class="input" required />
                         </div>
                         <div>
-                            <label class="field-label">Company Name</label>
+                            <label class="field-label">Company Name <span class="required-star">*</span></label>
                             <input id="company" name="company" type="text" placeholder="Enter your company name"
-                                class="input" />
+                                class="input" required />
                         </div>
                         <div>
-                            <label class="field-label">Email</label>
-                            <input id="email" name="email" type="email" placeholder="text@xyz.com" class="input" />
+                            <label class="field-label">Email <span class="required-star">*</span></label>
+                            <input id="email" name="email" type="email" placeholder="text@xyz.com" class="input" required />
                         </div>
                         <div>
-                            <label class="field-label">Phone</label>
-                            <input id="phone" name="phone" type="tel" placeholder="+91 91001 91001" class="input" />
+                            <label class="field-label">Phone <span class="required-star">*</span></label>
+                            <input id="phone" name="phone" type="tel" placeholder="+91 91001 91001" class="input" required />
+                        </div>
+                        <div>
+                            <label class="field-label">Department <span class="required-star">*</span></label>
+                            <input id="department" name="department" type="text" placeholder="eg. R&amp;D" class="input" required />
+                        </div>
+                        <div>
+                            <label class="field-label">Designation <span class="required-star">*</span></label>
+                            <input id="designation" name="designation" type="text" placeholder="eg. Senior Engineer" class="input" required />
                         </div>
                     </div>
                 </div>
@@ -106,25 +114,29 @@
                 <div class="section-card">
                     <div class="space-y">
                         <div>
-                            <label class="field-label">Address</label>
+                            <label class="field-label">Address <span class="required-star">*</span></label>
                             <textarea id="billingAddress" name="billingAddress" rows="4" placeholder="Add address"
-                                class="textarea"></textarea>
+                                class="textarea" required></textarea>
                         </div>
 
                         <div class="grid grid-3">
                             <div>
-                                <label class="field-label">Country</label>
+                                <label class="field-label">Country <span class="required-star">*</span></label>
                                 <input id="billingCountry" name="billingCountry" placeholder="eg. India"
-                                    class="input" />
+                                    class="input" required />
                             </div>
                             <div>
-                                <label class="field-label">State</label>
-                                <input id="billingState" name="billingState" placeholder="Ahmedabad" class="input" />
+                                <label class="field-label">State <span class="required-star">*</span></label>
+                                <input id="billingState" name="billingState" placeholder="Ahmedabad" class="input" required />
                             </div>
                             <div>
-                                <label class="field-label">Zip Code</label>
-                                <input id="billingZip" name="billingZip" placeholder="eg. 362266" class="input" />
+                                <label class="field-label">Zip Code <span class="required-star">*</span></label>
+                                <input id="billingZip" name="billingZip" placeholder="eg. 362266" class="input" required />
                             </div>
+                        </div>
+                        <div>
+                            <label class="field-label">GST Number <span class="optional-tag">(Optional)</span></label>
+                            <input id="billingGst" name="billingGst" type="text" placeholder="eg. 22AAAAA0000A1Z5" class="input" />
                         </div>
                     </div>
                 </div>
@@ -139,24 +151,28 @@
                 <div class="section-card">
                     <div class="space-y">
                         <div>
-                            <label class="field-label">Address</label>
+                            <label class="field-label">Address <span class="required-star">*</span></label>
                             <textarea id="shippingAddress" name="shippingAddress" rows="4" placeholder="Add address"
-                                class="textarea"></textarea>
+                                class="textarea" required></textarea>
                         </div>
                         <div class="grid grid-3">
                             <div>
-                                <label class="field-label">Country</label>
+                                <label class="field-label">Country <span class="required-star">*</span></label>
                                 <input id="shippingCountry" name="shippingCountry" placeholder="eg. India"
-                                    class="input" />
+                                    class="input" required />
                             </div>
                             <div>
-                                <label class="field-label">State</label>
-                                <input id="shippingState" name="shippingState" placeholder="Ahmedabad" class="input" />
+                                <label class="field-label">State <span class="required-star">*</span></label>
+                                <input id="shippingState" name="shippingState" placeholder="Ahmedabad" class="input" required />
                             </div>
                             <div>
-                                <label class="field-label">Zip Code</label>
-                                <input id="shippingZip" name="shippingZip" placeholder="eg. 362266" class="input" />
+                                <label class="field-label">Zip Code <span class="required-star">*</span></label>
+                                <input id="shippingZip" name="shippingZip" placeholder="eg. 362266" class="input" required />
                             </div>
+                        </div>
+                        <div>
+                            <label class="field-label">GST Number <span class="optional-tag">(Optional)</span></label>
+                            <input id="shippingGst" name="shippingGst" type="text" placeholder="eg. 22AAAAA0000A1Z5" class="input" />
                         </div>
                     </div>
                 </div>

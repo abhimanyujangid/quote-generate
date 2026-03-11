@@ -35,6 +35,7 @@ document.getElementById('sameAsBilling').addEventListener('change', (e) => {
         document.getElementById('shippingCountry').value = document.getElementById('billingCountry').value;
         document.getElementById('shippingState').value = document.getElementById('billingState').value;
         document.getElementById('shippingZip').value = document.getElementById('billingZip').value;
+        document.getElementById('shippingGst').value = document.getElementById('billingGst').value;
     }
 });
 
@@ -47,12 +48,26 @@ const previewCard = document.getElementById('previewCard');
 let currentData = {}; // Store data for PDF generation
 
 document.getElementById('previewBtn').addEventListener('click', () => {
-    // Validation
+    // Validation — all required fields
     const name = document.getElementById('name').value.trim();
+    const company = document.getElementById('company').value.trim();
     const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const department = document.getElementById('department').value.trim();
+    const designation = document.getElementById('designation').value.trim();
+    const billingAddress = document.getElementById('billingAddress').value.trim();
+    const billingCountry = document.getElementById('billingCountry').value.trim();
+    const billingState = document.getElementById('billingState').value.trim();
+    const billingZip = document.getElementById('billingZip').value.trim();
+    const shippingAddress = document.getElementById('shippingAddress').value.trim();
+    const shippingCountry = document.getElementById('shippingCountry').value.trim();
+    const shippingState = document.getElementById('shippingState').value.trim();
+    const shippingZip = document.getElementById('shippingZip').value.trim();
 
-    if (!name || !email) {
-        formStatus.textContent = 'Please fill at least Name and Email.';
+    if (!name || !company || !email || !phone || !department || !designation ||
+        !billingAddress || !billingCountry || !billingState || !billingZip ||
+        !shippingAddress || !shippingCountry || !shippingState || !shippingZip) {
+        formStatus.textContent = 'Please fill all required fields.';
         formStatus.style.color = 'red';
         return;
     }
@@ -62,17 +77,21 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     currentData = {
         plan: document.querySelector('input[name=plan]:checked').value,
         name,
-        company: document.getElementById('company').value.trim(),
+        company,
         email,
-        phone: document.getElementById('phone').value.trim(),
-        billingAddress: document.getElementById('billingAddress').value.trim(),
-        billingCountry: document.getElementById('billingCountry').value.trim(),
-        billingState: document.getElementById('billingState').value.trim(),
-        billingZip: document.getElementById('billingZip').value.trim(),
-        shippingAddress: document.getElementById('shippingAddress').value.trim(),
-        shippingCountry: document.getElementById('shippingCountry').value.trim(),
-        shippingState: document.getElementById('shippingState').value.trim(),
-        shippingZip: document.getElementById('shippingZip').value.trim(),
+        phone,
+        department,
+        designation,
+        billingAddress,
+        billingCountry,
+        billingState,
+        billingZip,
+        billingGst: document.getElementById('billingGst').value.trim(),
+        shippingAddress,
+        shippingCountry,
+        shippingState,
+        shippingZip,
+        shippingGst: document.getElementById('shippingGst').value.trim(),
         wavelength: document.querySelector('input[name=wavelength]:checked')?.value || 'N/A',
         extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A'
     };
@@ -96,9 +115,9 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                     <div class="preview-label">Name</div>
                     <div class="preview-value">${escapeHtml(currentData.name)}</div>
                 </div>
-                 <div class="preview-col">
+                <div class="preview-col">
                     <div class="preview-label">Company</div>
-                    <div class="preview-value">${escapeHtml(currentData.company) || '-'}</div>
+                    <div class="preview-value">${escapeHtml(currentData.company)}</div>
                 </div>
             </div>
             <div class="preview-row">
@@ -106,9 +125,19 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                     <div class="preview-label">Email</div>
                     <div class="preview-value">${escapeHtml(currentData.email)}</div>
                 </div>
-                 <div class="preview-col">
+                <div class="preview-col">
                     <div class="preview-label">Phone</div>
-                    <div class="preview-value">${escapeHtml(currentData.phone) || '-'}</div>
+                    <div class="preview-value">${escapeHtml(currentData.phone)}</div>
+                </div>
+            </div>
+            <div class="preview-row">
+                <div class="preview-col">
+                    <div class="preview-label">Department</div>
+                    <div class="preview-value">${escapeHtml(currentData.department)}</div>
+                </div>
+                <div class="preview-col">
+                    <div class="preview-label">Designation</div>
+                    <div class="preview-value">${escapeHtml(currentData.designation)}</div>
                 </div>
             </div>
 
@@ -122,6 +151,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                         ${escapeHtml(currentData.billingState)} ${escapeHtml(currentData.billingZip)}<br>
                         ${escapeHtml(currentData.billingCountry)}
                     </div>
+                    ${currentData.billingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${escapeHtml(currentData.billingGst)}</div>` : ''}
                 </div>
                 <div style="flex:1;">
                     <div class="preview-section-title">Shipping Address</div>
@@ -130,6 +160,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                         ${escapeHtml(currentData.shippingState)} ${escapeHtml(currentData.shippingZip)}<br>
                         ${escapeHtml(currentData.shippingCountry)}
                     </div>
+                    ${currentData.shippingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${escapeHtml(currentData.shippingGst)}</div>` : ''}
                 </div>
             </div>
 

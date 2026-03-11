@@ -293,3 +293,15 @@ h2 {
     font-size: 0.875rem;
     font-weight: 600;
 }
+
+.required-star {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+.optional-tag {
+    color: #9ca3af;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-left: 2px;
+}
