@@ -1,9 +1,9 @@
-// Legacy entry file. Logic has been moved into scripts/helpers.js, scripts/ui.js, scripts/previewPdf.js, and scripts/sheetsApi.js.
+// Preview generation and PDF download logic
 
-// Keeping data object here for backward compatibility if this file is still referenced.
-let currentData = {}; // Store data for PDF generation
+const { stage1: uiStage1, stage2: uiStage2, formStatus: uiFormStatus, previewCard: uiPreviewCard } = window.UIRefs;
 
-// --- 2. Stage Switching Logic & Preview (kept temporarily for compatibility) ---
+// Store data globally for other scripts (e.g., Sheets integration)
+window.currentData = {};
 
 document.getElementById('previewBtn').addEventListener('click', () => {
     // Validation — all required fields
@@ -25,14 +25,14 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     if (!name || !company || !email || !phone || !department || !designation ||
         !billingAddress || !billingCountry || !billingState || !billingZip ||
         !shippingAddress || !shippingCountry || !shippingState || !shippingZip) {
-        formStatus.textContent = 'Please fill all required fields.';
-        formStatus.style.color = 'red';
+        uiFormStatus.textContent = 'Please fill all required fields.';
+        uiFormStatus.style.color = 'red';
         return;
     }
-    formStatus.textContent = '';
+    uiFormStatus.textContent = '';
 
     // Collect Data
-    currentData = {
+    window.currentData = {
         plan: document.querySelector('input[name=plan]:checked').value,
         name,
         company,
@@ -54,8 +54,10 @@ document.getElementById('previewBtn').addEventListener('click', () => {
         extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A'
     };
 
+    const data = window.currentData;
+
     // Generate Preview HTML
-    const isAdvanced = currentData.plan === 'Advance' || currentData.plan === 'Pro';
+    const isAdvanced = data.plan === 'Advance' || data.plan === 'Pro';
 
     const html = `
         <div class="preview-header">
@@ -63,7 +65,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 <h2 style="margin:0;">Application Summary</h2>
                 <div style="font-size: 0.875rem; color:#6b7280; margin-top:4px;">${new Date().toLocaleDateString()}</div>
             </div>
-            <span class="preview-plan-badge">${escapeHtml(currentData.plan)} Plan</span>
+            <span class="preview-plan-badge">${window.escapeHtml(data.plan)} Plan</span>
         </div>
         <div class="preview-body">
             
@@ -71,31 +73,31 @@ document.getElementById('previewBtn').addEventListener('click', () => {
             <div class="preview-row">
                 <div class="preview-col">
                     <div class="preview-label">Name</div>
-                    <div class="preview-value">${escapeHtml(currentData.name)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.name)}</div>
                 </div>
                 <div class="preview-col">
                     <div class="preview-label">Company</div>
-                    <div class="preview-value">${escapeHtml(currentData.company)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.company)}</div>
                 </div>
             </div>
             <div class="preview-row">
                 <div class="preview-col">
                     <div class="preview-label">Email</div>
-                    <div class="preview-value">${escapeHtml(currentData.email)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.email)}</div>
                 </div>
                 <div class="preview-col">
                     <div class="preview-label">Phone</div>
-                    <div class="preview-value">${escapeHtml(currentData.phone)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.phone)}</div>
                 </div>
             </div>
             <div class="preview-row">
                 <div class="preview-col">
                     <div class="preview-label">Department</div>
-                    <div class="preview-value">${escapeHtml(currentData.department)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.department)}</div>
                 </div>
                 <div class="preview-col">
                     <div class="preview-label">Designation</div>
-                    <div class="preview-value">${escapeHtml(currentData.designation)}</div>
+                    <div class="preview-value">${window.escapeHtml(data.designation)}</div>
                 </div>
             </div>
 
@@ -105,20 +107,20 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 <div style="flex:1; padding-right: 1rem;">
                     <div class="preview-section-title">Billing Address</div>
                     <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
-                        ${nl2br(escapeHtml(currentData.billingAddress))}<br>
-                        ${escapeHtml(currentData.billingState)} ${escapeHtml(currentData.billingZip)}<br>
-                        ${escapeHtml(currentData.billingCountry)}
+                        ${window.nl2br(window.escapeHtml(data.billingAddress))}<br>
+                        ${window.escapeHtml(data.billingState)} ${window.escapeHtml(data.billingZip)}<br>
+                        ${window.escapeHtml(data.billingCountry)}
                     </div>
-                    ${currentData.billingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${escapeHtml(currentData.billingGst)}</div>` : ''}
+                    ${data.billingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${window.escapeHtml(data.billingGst)}</div>` : ''}
                 </div>
                 <div style="flex:1;">
                     <div class="preview-section-title">Shipping Address</div>
                     <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
-                        ${nl2br(escapeHtml(currentData.shippingAddress))}<br>
-                        ${escapeHtml(currentData.shippingState)} ${escapeHtml(currentData.shippingZip)}<br>
-                        ${escapeHtml(currentData.shippingCountry)}
+                        ${window.nl2br(window.escapeHtml(data.shippingAddress))}<br>
+                        ${window.escapeHtml(data.shippingState)} ${window.escapeHtml(data.shippingZip)}<br>
+                        ${window.escapeHtml(data.shippingCountry)}
                     </div>
-                    ${currentData.shippingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${escapeHtml(currentData.shippingGst)}</div>` : ''}
+                    ${data.shippingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${window.escapeHtml(data.shippingGst)}</div>` : ''}
                 </div>
             </div>
 
@@ -128,11 +130,11 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                  <div class="preview-row">
                     <div class="preview-col">
                         <div class="preview-label">Wavelength</div>
-                        <div class="preview-value">${escapeHtml(currentData.wavelength)}</div>
+                        <div class="preview-value">${window.escapeHtml(data.wavelength)}</div>
                     </div>
                      <div class="preview-col">
                         <div class="preview-label">Extrusion System</div>
-                        <div class="preview-value">${escapeHtml(currentData.extrusion)}</div>
+                        <div class="preview-value">${window.escapeHtml(data.extrusion)}</div>
                     </div>
                 </div>
             </div>
@@ -141,11 +143,44 @@ document.getElementById('previewBtn').addEventListener('click', () => {
         </div>
     `;
 
-    previewCard.innerHTML = html;
+    uiPreviewCard.innerHTML = html;
 
     // Switch Views
-    stage1.classList.add('hidden');
-    stage2.classList.remove('hidden');
+    uiStage1.classList.add('hidden');
+    uiStage2.classList.remove('hidden');
     window.scrollTo(0, 0);
+});
+
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+    const status = window.UIRefs.downloadStatus;
+    status.textContent = 'Generating PDF...';
+    status.style.color = '';
+
+    const element = uiPreviewCard;
+
+    const data = window.currentData || {};
+
+    const opt = {
+        margin: 15,
+        filename: `${(data.name || 'squyd').replace(/\s+/g, '_')}_${data.plan || 'Plan'}_Application.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+        await html2pdf().set(opt).from(element).save();
+        status.textContent = 'PDF Downloaded successfully.';
+        status.style.color = 'green';
+
+        // Also log to Google Sheets (non-blocking)
+        if (typeof window.logToSheet === 'function') {
+            window.logToSheet(window.currentData);
+        }
+    } catch (err) {
+        console.error(err);
+        status.textContent = 'Error generating PDF.';
+        status.style.color = 'red';
+    }
 });
 
