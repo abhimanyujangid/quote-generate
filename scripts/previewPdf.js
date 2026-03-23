@@ -22,7 +22,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     const shippingState = document.getElementById('shippingState').value.trim();
     const shippingZip = document.getElementById('shippingZip').value.trim();
 
-    if (!name || !company || !email || !phone || !department || !designation ||
+    if (!name || !company || !email || !phone ||
         !billingAddress || !billingCountry || !billingState || !billingZip ||
         !shippingAddress || !shippingCountry || !shippingState || !shippingZip) {
         uiFormStatus.textContent = 'Please fill all required fields.';
@@ -55,91 +55,120 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     };
 
     const data = window.currentData;
+    const roleParts = [data.designation, data.department].filter(Boolean);
+    const roleOfficeLine = roleParts.length ? roleParts.join(', ') : '';
+    const billingGstLine = data.billingGst ? `<div>${window.escapeHtml(data.billingGst)}</div>` : '';
+    const shippingGstLine = data.shippingGst ? `<div>${window.escapeHtml(data.shippingGst)}</div>` : '';
 
-    // Generate Preview HTML
-    const isAdvanced = data.plan === 'Advance' || data.plan === 'Pro';
-
+    // Generate quote-style Preview HTML
     const html = `
-        <div class="preview-header">
-            <div>
-                <h2 style="margin:0;">Application Summary</h2>
-                <div style="font-size: 0.875rem; color:#6b7280; margin-top:4px;">${new Date().toLocaleDateString()}</div>
-            </div>
-            <span class="preview-plan-badge">${window.escapeHtml(data.plan)} Plan</span>
-        </div>
-        <div class="preview-body">
-            
-            <div class="preview-section-title">Contact Information</div>
-            <div class="preview-row">
-                <div class="preview-col">
-                    <div class="preview-label">Name</div>
-                    <div class="preview-value">${window.escapeHtml(data.name)}</div>
+        <div class="quote-doc">
+            <div class="quote-top">
+                <div class="quote-company-block">
+                    <img src="image/logo.png" alt="Pharma Alley" class="quote-logo" />
+                    <div class="quote-company-text">
+                        <div class="quote-company-name">Anirveda Engineering PVT LTD</div>
+                        <div>5-H-12,</div>
+                        <div>Mahaveer Nagar</div>
+                        <div>3 Kota</div>
+                        <div>Rajasthan</div>
+                        <div>324005 India</div>
+                        <div>GSTIN 08ABBCA1079L1ZJ</div>
+                        <div>finance@designingalley.com</div>
+                        <div>https://designingalley.com/</div>
+                    </div>
                 </div>
-                <div class="preview-col">
-                    <div class="preview-label">Company</div>
-                    <div class="preview-value">${window.escapeHtml(data.company)}</div>
-                </div>
-            </div>
-            <div class="preview-row">
-                <div class="preview-col">
-                    <div class="preview-label">Email</div>
-                    <div class="preview-value">${window.escapeHtml(data.email)}</div>
-                </div>
-                <div class="preview-col">
-                    <div class="preview-label">Phone</div>
-                    <div class="preview-value">${window.escapeHtml(data.phone)}</div>
-                </div>
-            </div>
-            <div class="preview-row">
-                <div class="preview-col">
-                    <div class="preview-label">Department</div>
-                    <div class="preview-value">${window.escapeHtml(data.department)}</div>
-                </div>
-                <div class="preview-col">
-                    <div class="preview-label">Designation</div>
-                    <div class="preview-value">${window.escapeHtml(data.designation)}</div>
+                <div class="quote-head-right">
+                    <div class="quote-title">QUOTE</div>
+                    <div class="quote-number"># QT-&lt;Number&gt;</div>
                 </div>
             </div>
 
-            <div style="margin-top: 2rem;"></div>
+            <div class="quote-mid">
+                <div class="quote-addresses">
+                    <div class="quote-address-block">
+                        <div class="quote-address-title">Bill To</div>
+                        <div>${window.escapeHtml(data.name)}</div>
+                        ${roleOfficeLine ? `<div>${window.escapeHtml(roleOfficeLine)}</div>` : ''}
+                        <div>${window.escapeHtml(data.company)}</div>
+                        <div>${window.escapeHtml(`${data.billingZip} , ${data.billingState}`)}</div>
+                        <div>${window.escapeHtml(`${data.billingCountry}`)}</div>
+                        ${billingGstLine}
+                    </div>
 
-            <div class="flex-between" style="align-items: flex-start; margin-bottom:0;">
-                <div style="flex:1; padding-right: 1rem;">
-                    <div class="preview-section-title">Billing Address</div>
-                    <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
-                        ${window.nl2br(window.escapeHtml(data.billingAddress))}<br>
-                        ${window.escapeHtml(data.billingState)} ${window.escapeHtml(data.billingZip)}<br>
-                        ${window.escapeHtml(data.billingCountry)}
+                    <div class="quote-address-block">
+                        <div class="quote-address-title">Ship To</div>
+                        <div>${window.escapeHtml(data.name)}</div>
+                        ${roleOfficeLine ? `<div>${window.escapeHtml(roleOfficeLine)}</div>` : ''}
+                        <div>${window.escapeHtml(data.company)}</div>
+                        <div>${window.escapeHtml(`${data.shippingZip} , ${data.shippingState}`)}</div>
+                        <div>${window.escapeHtml(`${data.shippingCountry}`)}</div>
+                        ${shippingGstLine}
                     </div>
-                    ${data.billingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${window.escapeHtml(data.billingGst)}</div>` : ''}
                 </div>
-                <div style="flex:1;">
-                    <div class="preview-section-title">Shipping Address</div>
-                    <div class="preview-value" style="font-size: 0.95rem; line-height: 1.5;">
-                        ${window.nl2br(window.escapeHtml(data.shippingAddress))}<br>
-                        ${window.escapeHtml(data.shippingState)} ${window.escapeHtml(data.shippingZip)}<br>
-                        ${window.escapeHtml(data.shippingCountry)}
-                    </div>
-                    ${data.shippingGst ? `<div class="preview-label" style="margin-top:0.5rem;">GST</div><div class="preview-value" style="font-size:0.95rem;">${window.escapeHtml(data.shippingGst)}</div>` : ''}
-                </div>
-            </div>
 
-            ${isAdvanced ? `
-            <div style="margin-top: 2rem;">
-                <div class="preview-section-title">Technical Specifications</div>
-                 <div class="preview-row">
-                    <div class="preview-col">
-                        <div class="preview-label">Wavelength</div>
-                        <div class="preview-value">${window.escapeHtml(data.wavelength)}</div>
-                    </div>
-                     <div class="preview-col">
-                        <div class="preview-label">Extrusion System</div>
-                        <div class="preview-value">${window.escapeHtml(data.extrusion)}</div>
-                    </div>
+                <div class="quote-dates">
+                    <div>Quote Date : &lt;Date&gt;</div>
+                    <div>Expiry Date : &lt;Date&gt;</div>
                 </div>
             </div>
-            ` : ''}
 
+            <div class="quote-subject-title">Subject :</div>
+            <div class="quote-subject-value">3D Bioprinter Squyd &lt;Model&gt;</div>
+
+            <div class="quote-divider"></div>
+
+            <table class="quote-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item &amp; Description</th>
+                        <th>HSN/SAC</th>
+                        <th>Qty</th>
+                        <th>Rate</th>
+                        <th>IGST</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>&lt;Description&gt;</td>
+                        <td>998112</td>
+                        <td>&lt;Number&gt;</td>
+                        <td>&lt;Price&gt;</td>
+                        <td>&lt;Number&gt;</td>
+                        <td>&lt;Number&gt;</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td></td>
+                        <td>998112<br>&lt;Number&gt;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="quote-divider quote-divider-spaced"></div>
+
+            <div class="quote-total-wrap">
+                <div class="quote-total-line"><span>Sub Total</span></div>
+                <div class="quote-total-line"><span>IGST18 (18%)</span></div>
+                <div class="quote-total-row">
+                    <span>Total</span>
+                    <span>&lt;Number&gt;</span>
+                </div>
+                <div class="quote-total-words">Total In Words: &lt;Amount in Words&gt;</div>
+            </div>
+
+            <div class="quote-footer">
+                <div class="quote-notes-title">Notes</div>
+                <div>Looking forward for your business.</div>
+                <div class="quote-signature">Authorized Signature &lt;Digital Signature Statement&gt; _____________</div>
+            </div>
         </div>
     `;
 
@@ -156,16 +185,23 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     status.textContent = 'Generating PDF...';
     status.style.color = '';
 
-    const element = uiPreviewCard;
+    // Export only the quote document so preview container styles are excluded.
+    const element = uiPreviewCard.querySelector('.quote-doc');
+    if (!element) {
+        status.textContent = 'Nothing to export. Please preview first.';
+        status.style.color = 'red';
+        return;
+    }
 
     const data = window.currentData || {};
 
     const opt = {
-        margin: 15,
+        margin: [8, 8, 8, 8],
         filename: `${(data.name || 'squyd').replace(/\s+/g, '_')}_${data.plan || 'Plan'}_Application.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 1.5, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
     };
 
     try {

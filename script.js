@@ -22,7 +22,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     const shippingState = document.getElementById('shippingState').value.trim();
     const shippingZip = document.getElementById('shippingZip').value.trim();
 
-    if (!name || !company || !email || !phone || !department || !designation ||
+    if (!name || !company || !email || !phone ||
         !billingAddress || !billingCountry || !billingState || !billingZip ||
         !shippingAddress || !shippingCountry || !shippingState || !shippingZip) {
         formStatus.textContent = 'Please fill all required fields.';

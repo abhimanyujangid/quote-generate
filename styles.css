@@ -230,68 +230,248 @@ h2 {
     cursor: pointer;
 }
 
-/* --- Preview Specific Styles --- */
+/* --- Quote Preview/PDF Styles --- */
 .preview-container {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    overflow: hidden;
     background: #fff;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    overflow: auto;
 }
 
-.preview-header {
-    background: #f9fafb;
-    padding: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+/* Safety guard for PDF/print renderers that evaluate print styles. */
+@media print {
+    .preview-container {
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+.quote-doc {
+    width: 190mm;
+    max-width: 100%;
+    min-height: 277mm;
+    margin: 0 auto;
+    color: #262626;
+    font-size: 11px;
+    line-height: 1.34;
+}
+
+.quote-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    page-break-inside: avoid;
 }
 
-.preview-body {
-    padding: 2rem;
+.quote-company-block {
+    width: 50%;
 }
 
-.preview-section-title {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    border-bottom: 1px solid #f3f4f6;
-    padding-bottom: 0.5rem;
+.quote-logo {
+    width: 130px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 0.35rem;
 }
 
-.preview-row {
+.quote-company-text {
+    font-size: 12px;
+}
+
+.quote-company-name {
+    font-weight: 700;
+}
+
+.quote-head-right {
+    width: 36%;
+    text-align: left;
+    padding-top: 0.1rem;
+}
+
+.quote-title {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.quote-number {
+    margin-top: 2.9rem;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.quote-mid {
+    margin-top: 1.25rem;
     display: flex;
-    margin-bottom: 1.25rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.8rem;
+    page-break-inside: avoid;
 }
 
-.preview-col {
-    flex: 1;
-    padding-right: 1rem;
+.quote-addresses {
+    width: 60%;
 }
 
-.preview-label {
-    font-size: 0.85rem;
-    color: #6b7280;
+.quote-address-block {
+    margin-bottom: 0.65rem;
+    font-size: 12px;
+}
+
+.quote-address-title {
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 0.25rem;
 }
 
-.preview-value {
-    font-size: 1rem;
-    color: #111827;
+.quote-dates {
+    width: 34%;
+    font-size: 12px;
+    line-height: 1.5;
+    padding-top: 2.1rem;
+    padding-bottom: 0;
+}
+
+.quote-subject-title {
+    margin-top: 0.8rem;
+    font-size: 12px;
     font-weight: 500;
 }
 
-.preview-plan-badge {
-    background: #eff6ff;
-    color: #1d4ed8;
-    padding: 4px 12px;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 600;
+.quote-subject-value {
+    margin-top: 0.18rem;
+    font-size: 14px;
+}
+
+.quote-divider {
+    border-top: 1px solid #acacac;
+    margin: 0.7rem 0;
+}
+
+.quote-divider-spaced {
+    margin-top: 1rem;
+}
+
+.quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+}
+
+.quote-table th {
+    background: #3d3d3d;
+    color: #fff;
+    font-weight: 500;
+    padding: 7px 6px;
+    border: 1px solid #4d4d4d;
+    text-align: center;
+}
+
+.quote-table td {
+    border: none;
+    padding: 6px 6px;
+    vertical-align: top;
+    text-align: center;
+    line-height: 1.25;
+}
+
+.quote-table th:nth-child(1),
+.quote-table td:nth-child(1) {
+    width: 5%;
+}
+
+.quote-table th:nth-child(2),
+.quote-table td:nth-child(2) {
+    width: 34%;
+    text-align: left;
+}
+
+.quote-table th:nth-child(3),
+.quote-table th:nth-child(4),
+.quote-table th:nth-child(5),
+.quote-table th:nth-child(6),
+.quote-table th:nth-child(7),
+.quote-table td:nth-child(3) {
+    white-space: nowrap;
+}
+
+.quote-table td:nth-child(4),
+.quote-table td:nth-child(5),
+.quote-table td:nth-child(6),
+.quote-table td:nth-child(7) {
+    white-space: nowrap;
+}
+
+.quote-table th:nth-child(3),
+.quote-table td:nth-child(3) {
+    width: 14%;
+}
+
+.quote-table th:nth-child(4),
+.quote-table td:nth-child(4) {
+    width: 9%;
+}
+
+.quote-table th:nth-child(5),
+.quote-table td:nth-child(5) {
+    width: 11%;
+}
+
+.quote-table th:nth-child(6),
+.quote-table td:nth-child(6) {
+    width: 10%;
+}
+
+.quote-table th:nth-child(7),
+.quote-table td:nth-child(7) {
+    width: 17%;
+}
+
+.quote-total-wrap {
+    width: 31%;
+    margin-left: auto;
+    margin-top: 0.75rem;
+    font-size: 12px;
+}
+
+.quote-total-line {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.2rem 0;
+}
+
+.quote-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0f0f0;
+    margin-top: 0.2rem;
+    padding: 0.45rem 0.65rem;
+    font-weight: 700;
+}
+
+.quote-total-words {
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.quote-footer {
+    margin-top: 1.25rem;
+    font-size: 12px;
+}
+
+.quote-notes-title {
+    margin-bottom: 0.4rem;
+}
+
+.quote-signature {
+    margin-top: 1rem;
 }
 
 .required-star {
