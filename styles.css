@@ -288,8 +288,8 @@ h2 {
 }
 
 .quote-head-right {
-    width: 36%;
-    text-align: left;
+    width: 100%;
+    text-align: right;
     padding-top: 0.1rem;
 }
 
@@ -315,7 +315,7 @@ h2 {
 }
 
 .quote-addresses {
-    width: 60%;
+    width: 100%;
 }
 
 .quote-address-block {
@@ -330,7 +330,8 @@ h2 {
 }
 
 .quote-dates {
-    width: 34%;
+    width: 100%;
+    text-align: right;
     font-size: 12px;
     line-height: 1.5;
     padding-top: 2.1rem;

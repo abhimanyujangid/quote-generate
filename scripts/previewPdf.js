@@ -5,6 +5,31 @@ const { stage1: uiStage1, stage2: uiStage2, formStatus: uiFormStatus, previewCar
 // Store data globally for other scripts (e.g., Sheets integration)
 window.currentData = {};
 
+const PLAN_CONFIG = {
+    Lite: { label: 'SQUYD Lite', rate: 1800000 },
+    Edu: { label: 'SQUYD Edu', rate: 1900000 },
+    Advance: { label: 'SQUYD Advance', rate: 2000000 },
+    Pro: { label: 'SQUYD Pro', rate: 2350000 }
+};
+
+function formatDateDDMMYYYY(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function formatDateDDMMYY(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}${month}${year}`;
+}
+
+function formatInr(amount) {
+    return amount.toLocaleString('en-IN');
+}
+
 document.getElementById('previewBtn').addEventListener('click', () => {
     // Validation — all required fields
     const name = document.getElementById('name').value.trim();
@@ -31,9 +56,24 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     }
     uiFormStatus.textContent = '';
 
+    const selectedPlan = document.querySelector('input[name=plan]:checked').value;
+    const planConfig = PLAN_CONFIG[selectedPlan] || PLAN_CONFIG.Lite;
+    const qty = 1;
+    const amount = qty * planConfig.rate;
+    const subTotal = amount;
+    const igst = Math.round(subTotal * 0.18);
+    const total = subTotal + igst;
+    const today = new Date();
+    const expiry = new Date(today);
+    expiry.setDate(expiry.getDate() + 7);
+    const randomFourDigits = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    const quoteNumber = `SQUTD-${formatDateDDMMYY(today)}-${randomFourDigits}`;
+    const quoteDate = formatDateDDMMYYYY(today);
+    const expiryDate = formatDateDDMMYYYY(expiry);
+
     // Collect Data
     window.currentData = {
-        plan: document.querySelector('input[name=plan]:checked').value,
+        plan: selectedPlan,
         name,
         company,
         email,
@@ -51,7 +91,16 @@ document.getElementById('previewBtn').addEventListener('click', () => {
         shippingZip,
         shippingGst: document.getElementById('shippingGst').value.trim(),
         wavelength: document.querySelector('input[name=wavelength]:checked')?.value || 'N/A',
-        extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A'
+        extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A',
+        quoteNumber,
+        quoteDate,
+        expiryDate,
+        qty,
+        rate: planConfig.rate,
+        amount,
+        subTotal,
+        igst,
+        total
     };
 
     const data = window.currentData;
@@ -80,7 +129,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 </div>
                 <div class="quote-head-right">
                     <div class="quote-title">QUOTE</div>
-                    <div class="quote-number"># QT-&lt;Number&gt;</div>
+                    <div class="quote-number"># ${window.escapeHtml(quoteNumber)}</div>
                 </div>
             </div>
 
@@ -108,13 +157,13 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 </div>
 
                 <div class="quote-dates">
-                    <div>Quote Date : &lt;Date&gt;</div>
-                    <div>Expiry Date : &lt;Date&gt;</div>
+                    <div>Quote Date : ${window.escapeHtml(quoteDate)}</div>
+                    <div>Expiry Date : ${window.escapeHtml(expiryDate)}</div>
                 </div>
             </div>
 
             <div class="quote-subject-title">Subject :</div>
-            <div class="quote-subject-value">3D Bioprinter Squyd &lt;Model&gt;</div>
+            <div class="quote-subject-value">3D Bioprinter Squyd</div>
 
             <div class="quote-divider"></div>
 
@@ -133,21 +182,12 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 <tbody>
                     <tr>
                         <td>1</td>
-                        <td>&lt;Description&gt;</td>
+                        <td>${window.escapeHtml(planConfig.label)}</td>
                         <td>998112</td>
-                        <td>&lt;Number&gt;</td>
-                        <td>&lt;Price&gt;</td>
-                        <td>&lt;Number&gt;</td>
-                        <td>&lt;Number&gt;</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td>998112<br>&lt;Number&gt;</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>${qty}</td>
+                        <td>${window.escapeHtml(formatInr(planConfig.rate))}</td>
+                        <td>${window.escapeHtml(formatInr(igst))}</td>
+                        <td>${window.escapeHtml(formatInr(amount))}</td>
                     </tr>
                 </tbody>
             </table>
@@ -155,18 +195,18 @@ document.getElementById('previewBtn').addEventListener('click', () => {
             <div class="quote-divider quote-divider-spaced"></div>
 
             <div class="quote-total-wrap">
-                <div class="quote-total-line"><span>Sub Total</span></div>
-                <div class="quote-total-line"><span>IGST18 (18%)</span></div>
+                <div class="quote-total-line"><span>Sub Total</span><span>${' : ' + window.escapeHtml(formatInr(subTotal))}</span></div>
+                <div class="quote-total-line"><span>IGST (18%)</span><span>${' : ' + window.escapeHtml(formatInr(igst))}</span></div>
                 <div class="quote-total-row">
-                    <span>Total</span>
-                    <span>&lt;Number&gt;</span>
+                    <span>Total</span><span></span>
+                    <span>${window.escapeHtml(formatInr(total))}</span>
                 </div>
-                <div class="quote-total-words">Total In Words: &lt;Amount in Words&gt;</div>
+                <div class="quote-total-words">Total In Words: INR ${window.escapeHtml(formatInr(total))}</div>
             </div>
 
             <div class="quote-footer">
                 <div class="quote-notes-title">Notes</div>
-                <div>Looking forward for your business.</div>
+                <div>Shipping and installation charges will be excluded and will be charged separately.</div>
                 <div class="quote-signature">Authorized Signature &lt;Digital Signature Statement&gt; _____________</div>
             </div>
         </div>
