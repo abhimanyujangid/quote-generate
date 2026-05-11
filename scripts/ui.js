@@ -7,7 +7,7 @@ function toggleAdvancedOptions() {
     const selected = document.querySelector('input[name="plan"]:checked');
 
     // Show/Hide Advanced Section
-    if (selected && (selected.value === 'Advance' || selected.value === 'Pro')) {
+    if (selected && (selected.value === 'Advance' || selected.value === 'Elite')) {
         adv.classList.remove('hidden');
     } else {
         adv.classList.add('hidden');
