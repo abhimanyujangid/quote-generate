@@ -46,6 +46,10 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     const shippingCountry = document.getElementById('shippingCountry').value.trim();
     const shippingState = document.getElementById('shippingState').value.trim();
     const shippingZip = document.getElementById('shippingZip').value.trim();
+    const selectedPlan = document.querySelector('input[name=plan]:checked').value;
+    const isAdvancedPlan = selectedPlan === 'Advance' || selectedPlan === 'Pro';
+    const extruder1 = document.querySelector('input[name=extruder1]:checked')?.value || '';
+    const extruder2 = document.querySelector('input[name=extruder2]:checked')?.value || '';
 
     if (!name || !company || !email || !phone ||
         !billingAddress || !billingCountry || !billingState || !billingZip ||
@@ -54,9 +58,15 @@ document.getElementById('previewBtn').addEventListener('click', () => {
         uiFormStatus.style.color = 'red';
         return;
     }
+
+    if (isAdvancedPlan && (!extruder1 || !extruder2)) {
+        uiFormStatus.textContent = 'Please select options for Extruder 1 and Extruder 2.';
+        uiFormStatus.style.color = 'red';
+        return;
+    }
+
     uiFormStatus.textContent = '';
 
-    const selectedPlan = document.querySelector('input[name=plan]:checked').value;
     const planConfig = PLAN_CONFIG[selectedPlan] || PLAN_CONFIG.Lite;
     const qty = 1;
     const amount = qty * planConfig.rate;
@@ -91,7 +101,8 @@ document.getElementById('previewBtn').addEventListener('click', () => {
         shippingZip,
         shippingGst: document.getElementById('shippingGst').value.trim(),
         wavelength: document.querySelector('input[name=wavelength]:checked')?.value || 'N/A',
-        extrusion: document.querySelector('input[name=extrusion]:checked')?.value || 'N/A',
+        extruder1: extruder1 || 'N/A',
+        extruder2: extruder2 || 'N/A',
         quoteNumber,
         quoteDate,
         expiryDate,
@@ -108,6 +119,13 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     const roleOfficeLine = roleParts.length ? roleParts.join(', ') : '';
     const billingGstLine = data.billingGst ? `<div>${window.escapeHtml(data.billingGst)}</div>` : '';
     const shippingGstLine = data.shippingGst ? `<div>${window.escapeHtml(data.shippingGst)}</div>` : '';
+    const quoteOptionDetails = isAdvancedPlan ? `
+                            <div class="quote-item-options">
+                                <div>Wavelength: ${window.escapeHtml(data.wavelength)}</div>
+                                <div>Extruder 1: ${window.escapeHtml(data.extruder1)}</div>
+                                <div>Extruder 2: ${window.escapeHtml(data.extruder2)}</div>
+                            </div>
+                        ` : '';
 
     // Generate quote-style Preview HTML
     const html = `
@@ -182,7 +200,10 @@ document.getElementById('previewBtn').addEventListener('click', () => {
                 <tbody>
                     <tr>
                         <td>1</td>
-                        <td>${window.escapeHtml(planConfig.label)}</td>
+                        <td>
+                            <div>${window.escapeHtml(planConfig.label)}</div>
+                            ${quoteOptionDetails}
+                        </td>
                         <td>998112</td>
                         <td>${qty}</td>
                         <td>${window.escapeHtml(formatInr(planConfig.rate))}</td>
