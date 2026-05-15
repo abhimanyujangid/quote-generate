@@ -55,7 +55,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     };
 
     // Generate Preview HTML
-    const isAdvanced = currentData.plan === 'Advance' || currentData.plan === 'Elite';
+    const isAdvanced = currentData.plan === 'Advance' || currentData.plan === 'Pro';
 
     const html = `
         <div class="preview-header">

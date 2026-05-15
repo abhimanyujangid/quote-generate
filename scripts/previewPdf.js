@@ -9,7 +9,7 @@ const PLAN_CONFIG = {
     Lite: { label: 'SQUYD Lite', rate: 1800000 },
     Edu: { label: 'SQUYD Edu', rate: 1900000 },
     Advance: { label: 'SQUYD Advance', rate: 2000000 },
-    Elite: { label: 'SQUYD Elite', rate: 2350000 }
+    Pro: { label: 'SQUYD Pro', rate: 2350000 }
 };
 
 function formatDateDDMMYYYY(date) {
@@ -47,7 +47,7 @@ document.getElementById('previewBtn').addEventListener('click', () => {
     const shippingState = document.getElementById('shippingState').value.trim();
     const shippingZip = document.getElementById('shippingZip').value.trim();
     const selectedPlan = document.querySelector('input[name=plan]:checked').value;
-    const isAdvancedPlan = selectedPlan === 'Advance' || selectedPlan === 'Elite';
+    const isAdvancedPlan = selectedPlan === 'Advance' || selectedPlan === 'Pro';
     const extruder1 = document.querySelector('input[name=extruder1]:checked')?.value || '';
     const extruder2 = document.querySelector('input[name=extruder2]:checked')?.value || '';
 
